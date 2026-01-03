@@ -1601,6 +1601,17 @@
                     filtered = executors;
                 } else {
                     filtered = executors.filter(executor => {
+                        const isExternal = (
+                            (executor.extype && executor.extype.toLowerCase().includes('external')) ||
+                            (executor.platform && executor.platform.toLowerCase().includes('external')) ||
+                            (executor.name && executor.name.toLowerCase().includes('external'))
+                        );
+                        
+                        // 如果是 External 类型，只有在选择 External 过滤时才显示
+                        if (isExternal) {
+                            return platform === 'external';
+                        }
+                        
                         // 检查 extype 字段
                         if (executor.extype) {
                             const extype = executor.extype.toLowerCase();
@@ -1611,8 +1622,6 @@
                             } else if (platform === 'ios' && extype.includes('i')) {
                                 return true;
                             } else if (platform === 'mac' && extype.includes('m')) {
-                                return true;
-                            } else if (platform === 'external' && extype.includes('external')) {
                                 return true;
                             }
                         }
@@ -1628,8 +1637,6 @@
                                 return true;
                             } else if (platform === 'mac' && (executorPlatform.includes('mac') || executorPlatform.includes('osx'))) {
                                 return true;
-                            } else if (platform === 'external' && executorPlatform.includes('external')) {
-                                return true;
                             }
                         }
                         
@@ -1643,8 +1650,6 @@
                             } else if (platform === 'ios' && (executorName.includes('ios') || executorName.includes('iphone') || executorName.includes('ipad'))) {
                                 return true;
                             } else if (platform === 'mac' && (executorName.includes('mac') || executorName.includes('osx'))) {
-                                return true;
-                            } else if (platform === 'external' && executorName.includes('external')) {
                                 return true;
                             }
                         }
